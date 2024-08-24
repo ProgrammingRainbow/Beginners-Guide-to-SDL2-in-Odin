@@ -26,9 +26,9 @@ game_cleanup :: proc(g: ^Game) {
 	}
 }
 
-sdl_initialize :: proc(g: ^Game) -> bool {
+initialize :: proc(g: ^Game) -> bool {
 	if sdl.Init(SDL_FLAGS) != 0 {
-		fmt.eprintf("Error initializing SDL: %s\n", sdl.GetError())
+		fmt.eprintfln("Error initializing SDL2: %s", sdl.GetError())
 		return false
 	}
 
@@ -41,21 +41,15 @@ sdl_initialize :: proc(g: ^Game) -> bool {
 		WINDOW_FLAGS,
 	)
 	if g.window == nil {
-		fmt.eprintf("Error creating window: %s\n", sdl.GetError())
+		fmt.eprintfln("Error creating Window: %s", sdl.GetError())
 		return false
 	}
 
 	g.renderer = sdl.CreateRenderer(g.window, -1, RENDER_FLAGS)
 	if g.renderer == nil {
-		fmt.eprintf("Error creating renderer: %s\n", sdl.GetError())
+		fmt.eprintfln("Error creating Renderer: %s", sdl.GetError())
 		return false
 	}
-
-	// Print Window and Renderer flags.
-	//info: sdl.RendererInfo
-	//sdl.GetRendererInfo(g.renderer, &info)
-	//fmt.println(info.flags)
-	//fmt.println(sdl.GetWindowFlags(g.window))
 
 	return true
 }
@@ -64,15 +58,17 @@ main :: proc() {
 	exit_status := 0
 	game: Game
 
-	defer game_cleanup(&game)
 	defer os.exit(exit_status)
+	defer game_cleanup(&game)
 
-	if !sdl_initialize(&game) {
+	if !initialize(&game) {
 		exit_status = 1
 		return
 	}
 
 	sdl.RenderClear(game.renderer)
+
 	sdl.RenderPresent(game.renderer)
+
 	sdl.Delay(5000)
 }

@@ -33,15 +33,15 @@ game_cleanup :: proc(g: ^Game) {
 	}
 }
 
-sdl_initialize :: proc(g: ^Game) -> bool {
+initialize :: proc(g: ^Game) -> bool {
 	if sdl.Init(SDL_FLAGS) != 0 {
-		fmt.eprintf("Error initializing SDL: %s\n", sdl.GetError())
+		fmt.eprintfln("Error initializing SDL2: %s", sdl.GetError())
 		return false
 	}
 
 	img_init := img.Init(IMG_FLAGS)
 	if (img_init & IMG_FLAGS) != IMG_FLAGS {
-		fmt.eprintf("Error initializing SDL_image: %s\n", img.GetError())
+		fmt.eprintfln("Error initializing SDL2_image: %s", img.GetError())
 		return false
 	}
 
@@ -54,13 +54,13 @@ sdl_initialize :: proc(g: ^Game) -> bool {
 		WINDOW_FLAGS,
 	)
 	if g.window == nil {
-		fmt.eprintf("Error creating window: %s\n", sdl.GetError())
+		fmt.eprintfln("Error creating Window: %s", sdl.GetError())
 		return false
 	}
 
 	g.renderer = sdl.CreateRenderer(g.window, -1, RENDER_FLAGS)
 	if g.renderer == nil {
-		fmt.eprintf("Error creating renderer: %s\n", sdl.GetError())
+		fmt.eprintfln("Error creating Renderer: %s", sdl.GetError())
 		return false
 	}
 
@@ -70,7 +70,7 @@ sdl_initialize :: proc(g: ^Game) -> bool {
 load_media :: proc(g: ^Game) -> bool {
 	g.background = img.LoadTexture(g.renderer, "images/background.png")
 	if g.background == nil {
-		fmt.eprintf("Error loading Texture: %s\n", img.GetError())
+		fmt.eprintfln("Error loading Texture: %s", img.GetError())
 		return false
 	}
 
@@ -79,7 +79,7 @@ load_media :: proc(g: ^Game) -> bool {
 
 game_run :: proc(g: ^Game) {
 	for {
-		if sdl.PollEvent(&g.event) {
+		for sdl.PollEvent(&g.event) {
 			#partial switch g.event.type {
 			case .QUIT:
 				return
@@ -105,10 +105,10 @@ main :: proc() {
 	exit_status := 0
 	game: Game
 
-	defer game_cleanup(&game)
 	defer os.exit(exit_status)
+	defer game_cleanup(&game)
 
-	if !sdl_initialize(&game) {
+	if !initialize(&game) {
 		exit_status = 1
 		return
 	}
