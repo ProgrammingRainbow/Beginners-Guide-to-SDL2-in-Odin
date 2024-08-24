@@ -1,6 +1,7 @@
 ![Screenshot](screenshot.png)
 
 # An in-depth guide to getting started with SDL2 in the Go Language.
+https://www.youtube.com/playlist?list=PLO02jwa2ZaiDY7kVImqZUHDiuomsl7OdA
 
 ## Build and Run
 You will need Odin installed.
