@@ -40,6 +40,7 @@ game_cleanup :: proc(g: ^Game) {
 		if g.renderer != nil {sdl.DestroyRenderer(g.renderer)}
 		if g.window != nil {sdl.DestroyWindow(g.window)}
 
+		ttf.Quit()
 		img.Quit()
 		sdl.Quit()
 	}
