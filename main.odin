@@ -81,7 +81,7 @@ initialize :: proc(g: ^Game) -> bool {
 	}
 
 	if ttf.Init() != 0 {
-		fmt.eprintfln("Error initializing SDL2_TTF: %s", sdl.GetError())
+		fmt.eprintfln("Error initializing SDL2_TTF: %s", ttf.GetError())
 		return false
 	}
 
